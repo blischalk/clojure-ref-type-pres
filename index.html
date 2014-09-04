@@ -173,47 +173,136 @@
 					</p>
 				</section>
 
-				<section>
-					<h1>THE END</h1>
-					<h3>By Brett Lischalk / brettlischalk.com</h3>
-				</section>
+        <section>
+        <h2>What is Concurrency?</h2>
+        <ul>
+          <li>Talking on the phone while driving</li>
+          <li>When multiple threads are making progress whether through parallelism
+          or time-slicing</li>
+          <li> When two tasks can start, run, and complete in overlapping time
+          periods.</li>
+          <li> Is about dealing with lots of things at once.</li>
+        </ul>
+        </section>
 
-			</div>
+        <section>
+          <h2>What is Parallelism?</h2>
+          <ul>
+            <li>Parallelism is about doing lots of things at once.</li>
+            <li>Calculations are carried out simultaneously.</li>
+            <li>Breaking a problem into smaller pieces and solving the smaller
+            pieces at the same time.</li>
+          </ul>
+        </section>
 
-		</div>
+        <section>
+        <h2>Ok But When Would I Use This?  A Real World Example Please...</h2>
+        <p><strong>Requirement</strong>: You want to find the warmest average temperature over
+        the last 10 years out of the 10 largest U.S cities.</p>
+        </section>
 
-		<script src="lib/js/head.min.js"></script>
-		<script src="js/reveal.min.js"></script>
+        <section>
+        <h2>Slow Approach></h2>
+        <ul>
+          <li>For each city in my list of cities, perform an http request to
+          grab all of the data.</li>
+          <li> Each request will be submitted one after the next.</li>
+          <li> If each request takes approx 3 seconds to run, your total time to
+          get all the data is 30 seconds</li>
+        </ul>
+        </section>
 
-		<script>
+        <section>
+        <h2>Parallel Approach</h2>
+        <ul>
+          <li>Get each cities data in parallel on its own thread.</li>
+          <li>If each http request takes 3 seconds to complete, it should only
+          take ~3 seconds to get all of the data.</li>
+        </ul>
+        </section>
 
-			// Full list of configuration options available here:
-			// https://github.com/hakimel/reveal.js#configuration
-			Reveal.initialize({
-				controls: true,
-				progress: true,
-				history: true,
-				center: true,
+        <section>
+        <h2>Ok.  I'm sold.  Hod do I do this in Clojure?</h2>
+        <p>Using:</p>
+        <ul>
+          <li>Futures, Promises, Java Threading API, Reducers, pmap</li>
+          <li>The reference types (Refs, Atoms, Vals, and Agents)</li>
+        </ul>
+        </section>
 
-				theme: Reveal.getQueryHash().theme, // available themes are in /css/theme
-				transition: Reveal.getQueryHash().transition || 'default', // default/cube/page/concave/zoom/linear/fade/none
+        <section>
+        <h2>Futures &amp; Promises</h2>
+          <div data-markdown>
+            <script type="text/template">
+              ```
+              # Do something in another thread
+              # It is only run once and its result is cached
+              (future (println "Printing from another thread"))
+              (let [pro (promise)]
+                (future (Thread/sleep 3000)
+                (deliver pro))
+                
+                # dereferencing the promise will block the thread until it is fulfilled
+                @pro)
 
-				// Parallax scrolling
-				// parallaxBackgroundImage: 'https://s3.amazonaws.com/hakim-static/reveal-js/reveal-parallax-1.jpg',
-				// parallaxBackgroundSize: '2100px 900px',
+              ```
+            </script>
+          </div>
+        </section>
 
-				// Optional libraries used to extend on reveal.js
-				dependencies: [
-					{ src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
-					{ src: 'plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
-					{ src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
-					{ src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
-					{ src: 'plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
-					{ src: 'plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } }
-				]
-			});
+        <section>
+        <h2>Java Threading API</h2>
+        </section>
 
-		</script>
+        <section>
+        <h2>Reducers</h2>
+        </section>
 
-	</body>
+        <section>
+        <h2>pmap</h2>
+        </section>
+
+        <section>
+        <h1>THE END</h1>
+        <h3>By Brett Lischalk / brettlischalk.com</h3>
+        </section>
+
+      </div>
+
+    </div>
+
+    <script src="lib/js/head.min.js"></script>
+    <script src="js/reveal.min.js"></script>
+
+    <script>
+
+      // Full list of configuration options available here:
+      // https://github.com/hakimel/reveal.js#configuration
+      Reveal.initialize({
+        controls: true,
+        progress: true,
+        history: true,
+        center: true,
+
+        theme: Reveal.getQueryHash().theme, // available themes are in /css/theme
+        transition: Reveal.getQueryHash().transition || 'default', // default/cube/page/concave/zoom/linear/fade/none
+
+        // Parallax scrolling
+        // parallaxBackgroundImage: 'https://s3.amazonaws.com/hakim-static/reveal-js/reveal-parallax-1.jpg',
+        // parallaxBackgroundSize: '2100px 900px',
+
+        // Optional libraries used to extend on reveal.js
+        dependencies: [
+        { src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
+        { src: 'plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+        { src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+        { src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+        { src: 'plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
+        { src: 'plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } }
+        ]
+      });
+
+    </script>
+
+  </body>
 </html>
